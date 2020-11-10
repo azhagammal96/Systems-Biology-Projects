@@ -1,0 +1,34 @@
+#Model of las-rhl system
+param kRA=0.5, kHB=0.5, kP=0.01, kR=0.01, k1=0.5, kA=0.01, k2=5, kL=0.01, k3=0.1, k9=0.5, ki=1, kY=0.01, kH=0.01, k6=0.5, kB=0.01, k7=1, kI1=0.14, k8=0.1, Km=1, q=0.1, x=0.1, z=0.1, s=0.1
+init h=0.01, r=0.01, l=0.01, i=0.01
+
+ 
+#The ODE for the mRNA, protein, and autoinducers involved in quorum sensing
+#For simplicity we use alphabetical notations
+
+#-- LasR -> R
+#-- 3-oxo-C12-HSL -> A
+#-- LasR/3-oxo-C12-HSL -> P
+#-- LasI -> L
+#-- lasR mRNA -> r
+#-- lasI mRNA -> l
+#-- rhlR mRNA -> h
+#-- RhlR -> H
+#-- RhlR/C4-HSL -> Y
+#-- C4-HSL -> B
+#-- rhlI -> i
+#-- RhlI -> I
+
+#ODEs
+P' = kRA*R*A - kP*P
+Y' = k9*(H-Y)*B/((Km*(1 + A/ki))+B) - kY*Y
+I' = k8*s - kI1*I
+H' = -k9*(H-Y)*B/((Km*(1 + A/ki))+B) + kY*Y - kH*H + k6*z
+B' = -k9*(H-Y)*B/((Km*(1 + A/ki))+B) + kY*Y- kB*B + k7*I
+R' = -kRA*R*A + kP*P - kR*R + k1*x
+A' = -kRA*R*A + kP*P - kA*A + k2*L - k9*(H-Y)*B/((Km*(1 + A/ki))+B) 
+L' = k3*q - kL*L
+
+@ NPLOT=4, yp1=P, yp2=R, yp3=H, yp4=Y
+@ total=60,dt=0.1,method=stiff
+done
